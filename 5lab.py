@@ -46,6 +46,8 @@ def first_step():
 
   plt.plot(x, y, c='blue', label='T', marker='X')
   plt.scatter(X_test, model.predict(X_test), c='green', label='тест')
+  plt.legend()
+  plt.show()
 
 def second_step():
 
@@ -81,12 +83,17 @@ def second_step():
   _, accuracy = model.evaluate(np.column_stack((t_train, fi_train)), y_train)
   _, accuracy2 = model.evaluate(np.column_stack((t_test, fi_test)), y_test)
 
-  predictions = model.predict(np.column_stack((t_test, fi_test)))
+  predictions = model.predict(np.column_stack((t_train, fi_train)))
   plt.figure(figsize=(10., 10.))
   plt.plot(x, y, c='blue', label='T', marker='X')
 
   plt.title("\nточность обучения %.2f" % (accuracy*100))
-  plt.scatter(X_test, predictions, label='Предсказания', color='red')
+  for i in range(len(X_train)):
+      plt.scatter((X_train)[i], predictions[i], c='red', label=('prediction' if i==0 else None))
+  #plt.scatter(X_train, predictions, label='Предсказания', color='red')
+  plt.scatter(X_test, model.predict(np.column_stack((t_test, fi_test))), label='тест', color='green')
+  plt.legend()
+  plt.show()
 
 def third_step():
 
@@ -132,13 +139,24 @@ def third_step():
   _, accuracy2 = model_combined.evaluate([X_test, X_test], y_test)
   print("Точность на тестовой выборке:", accuracy2 * 100)
 
-  y_pred = model_combined.predict([X_test, X_test])
+  #y_pred = model_combined.predict([X_train, X_train])
 
-  plt.plot(x, y, label='f(x)')
+  # plt.figure(figsize=(10., 10.))
+  # plt.plot(x, y, c='blue', label='T', marker='X')
+  # plt.title("\nточность обучения %.2f" % (accuracy*100))
+  # plt.scatter(X_test, y_pred, label='Предсказания', color='red', alpha=1)
+  # plt.xlabel('x')
+  # plt.ylabel('y')
+  # plt.legend()
+  # plt.show()
+
+  plt.figure(figsize=(10., 10.))
+  plt.plot(x, y, c='blue', label='T', marker='X')
+
   plt.title("\nточность обучения %.2f" % (accuracy*100))
-  plt.scatter(X_test, y_pred, label='Предсказания', color='red', alpha=1)
-  plt.xlabel('x')
-  plt.ylabel('y')
+  plt.scatter(X_train, model_combined.predict([X_train, X_train]), c='red', label='prediction')
+  #plt.scatter(X_train, predictions, label='Предсказания', color='red')
+  plt.scatter(X_test, model_combined.predict([X_test, X_test]), label='тест', c='green')
   plt.legend()
   plt.show()
 
